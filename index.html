@@ -10,10 +10,25 @@
   </head>
   
   <body onload="init()">
-    <img src="./assets/monsterMain.png" width="500px">
+    <div id="colorButtons">
+      <button type="button" id="blue" class="color" value="#75C5CA" onclick="changeWallColor()">
+      <button type="button" id="green" class="color" value="#A8DFA6" onclick="changeWallColor()">
+      <button type="button" id="pink" class="color" value="#DFC1D7" onclick="changeWallColor()">
+      <button type="button" id="grey" class="color" value="#97A0A0" onclick="changeWallColor()">
+    </div>
     <div id="gameArea">
 
       <!--<canvas id="gameScreen"></canvas>-->
+    </div>
+    <div id="actionOptions">
+      <input type="image" src="./assets/feed.png" class="action" id="feed" value="0" 
+        onmouseover="this.src='./assets/feedHover.png'" onmouseout="this.src='./assets/feed.png'" onclick="updateStat()">
+      <input type="image" src="./assets/pet.png" class="action" id="pet" value="1" onclick="updateStat()"
+        onmouseover="this.src='./assets/petHover.png'" onmouseout="this.src='./assets/pet.png'" onclick="updateStat()">
+      <input type="image" src="./assets/train.png" class="action" id="train" value="2" onclick="updateStat()"
+        onmouseover="this.src='./assets/trainHover.png'" onmouseout="this.src='./assets/train.png'" onclick="updateStat()">
+      <input type="image" src="./assets/walk.png" class="action" id="walk" value="3" onclick="updateStat()"
+        onmouseover="this.src='./assets/walkHover.png'" onmouseout="this.src='./assets/walk.png'" onclick="updateStat()">
     </div>
   </body>
 </html>

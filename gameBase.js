@@ -2,27 +2,29 @@ const monsterImgs = {
   MONSTERMAIN: new Two.Texture("./assets/monsterMain.png")
 };
 
-const actionImgs = {
-  FEED:   new Two.Texture("./assets/feed.png"),
-  PET:    new Two.Texture("./assets/pet.png"),
-  TRAIN:  new Two.Texture("./assets/train.png"),
-  WALK:   new Two.Texture("./assets/walk.png")
-};
-
 var two;
-var monsterStage;
+var monsterStage; // Stage of monster growth
+
+// Game graphic elements
 var wall;
-var width;
+var floor;
+var monster;
 var statText;
 var statBars;
+var help;
 
-function drawGameScreen(two){
+var width;
+var wallHeight;
+var floorHeight;
+var dockHeight;
+
+function drawGameScreen(){
   // general game area variables
-  width = two.width * 0.9;
-  var x     = two.width * 0.5;  // center X val
-  var wallHeight    = 350;
-  var floorHeight   = wallHeight * 0.25;
-  var dockHeight    = 125;
+  width         = two.width - 90;
+  var x         = two.width * 0.5;  // center X val
+  wallHeight    = 350;
+  floorHeight   = wallHeight * 0.25;
+  dockHeight    = 125;
   // draw wall and floor
   var wallY = (wallHeight * 0.5) + 50;
   wall = two.makeRectangle(x, wallY, width, wallHeight);
@@ -30,62 +32,9 @@ function drawGameScreen(two){
   wall.noStroke();
 
   var floorY = (wallHeight + 50) - floorHeight * 0.5;
-  var floor = two.makeRectangle(x, floorY, width, floorHeight);
+  floor = two.makeRectangle(x, floorY, width, floorHeight);
   floor.fill = '#6A6358';
   floor.noStroke();
-
-  // draw game contents
-  drawMonster(two, x, floorY);
-  drawColorButtons(two, wall, width, wallHeight);
-  drawActionButtons(two, wallHeight, dockHeight, width);
-  drawStats(two, wallHeight, dockHeight, width);
-}
-
-function drawMonster(two, x, floorY){
-  two.makeSprite(monsterImgs.MONSTERMAIN, x, floorY-100);
-}
-
-function drawColorButtons(two, wall, wallHeight){
-  var x     = two.width * 0.5;  // center X val
-  var colorButtonYStart = 40 + (wallHeight * 0.1);
-  var areaEdge          = x + (width * 0.5);
-
-  var blueButton = new colorButton(two, wall, '#75C5CA', areaEdge, colorButtonYStart);
-  blueButton.draw(two);
-  var separation        = blueButton.size + 5;
-
-  var greenButton = new colorButton(two, wall, '#A8DFA6', areaEdge, colorButtonYStart + separation);
-  greenButton.draw(two);
-
-  var pinkButton = new colorButton(two, wall, '#DFC1D7', areaEdge, colorButtonYStart + (separation * 2));
-  pinkButton.draw(two);
-
-  var greyButton = new colorButton(two, wall, '#97A0A0', areaEdge, colorButtonYStart + (separation * 3));
-  greyButton.draw(two);
-}
-
-function drawActionButtons(two, wallHeight, dockHeight){
-  var x             = two.width * 0.5;  // center X val
-  var topGap        = 50; // gap between top and main game area
-  var dockMidpointY = topGap + wallHeight + (dockHeight * 0.5) + 20;
-
-  var rect = two.makeRoundedRectangle(x, dockMidpointY, width, dockHeight, 20);
-  rect.fill = '#B7C3C3';
-  rect.noStroke();
-
-  var actionGap = width * 0.25;
-
-  var feed = new actionButton(x - (actionGap + (actionGap * 0.5)), dockMidpointY, two, actionImgs.FEED, 0);
-  feed.draw();
-
-  var pet = new actionButton(x - (actionGap * 0.5), dockMidpointY, two, actionImgs.PET, 1);
-  pet.draw();
-
-  var train = new actionButton(x + (actionGap * 0.5), dockMidpointY, two, actionImgs.TRAIN, 2);
-  train.draw();
-
-  var walk  = new actionButton(x + (actionGap + (actionGap * 0.5)), dockMidpointY, two, actionImgs.WALK, 3);
-  walk.draw();
 }
 
 function drawStatBars(){
@@ -93,7 +42,7 @@ function drawStatBars(){
   var totalGap      = 50 + 20 + 50;
   var midpointBarY  = totalGap + 350 + 120;
   var x             = two.width * 0.5;  // center X val
-  var textGap       = width * 0.2;
+  var textGap       = 90;
 
   statBars = [two.makeRectangle(x - (textGap * 2), midpointBarY + (statHeight-(stats[0] * 5)), 50, (stats[0] * 10)),
     two.makeRectangle(x - textGap, midpointBarY + (statHeight-(stats[1] * 5)), 50, (stats[1] * 10)),
@@ -108,21 +57,21 @@ function drawStatBars(){
   statBars[4].fill = '#883677'; statBars[4].noStroke();
 }
 
-function drawStats(two, wallHeight, dockHeight){
+function drawStats(wallHeight, dockHeight){
   var statHeight    = 75;
   var totalGap      = 50 + 20 + 50;
   var midpointBarY  = totalGap + wallHeight + dockHeight;
   var midpointTextY = totalGap + wallHeight + dockHeight + (statHeight + 20);
   var x             = two.width * 0.5;  // center X val
-  var textGap       = width * 0.2;
+  var textGap       = 90;
 
-  console.log("drawing stats");
+  //console.log("drawing stats");
   var styles = {
     size: 15,
     color: 'black'
   };
 
-  drawStatBars(two, x, textGap, statHeight, midpointBarY);
+  drawStatBars(x, textGap, statHeight, midpointBarY);
 
   statText = [two.makeText("fullness: " + stats[0], x - (textGap * 2), midpointTextY, styles),
     two.makeText("happiness: " + stats[1], x - textGap, midpointTextY, styles),
@@ -130,6 +79,11 @@ function drawStats(two, wallHeight, dockHeight){
     two.makeText("activity: " + stats[3], x + textGap, midpointTextY, styles),
     two.makeText("neglect: " + stats[4], x + (textGap * 2), midpointTextY, styles)];
 }
+
+
+
+
+
 
 // Make an instance of two and place it on the page.
 function init(){
@@ -143,19 +97,43 @@ function init(){
 
   // initialize game screen
   var params = {
-    fullscreen: true
+    fullscreen: false,
+    width: window.innerWidth,
+    height: 1000
   };
-  var elem = document.body;
+  var elem = document.querySelector("#gameArea");
   two = new Two(params).appendTo(elem);
 
   drawGameScreen(two);
+  // draw game contents
+  monster = two.makeSprite(monsterImgs.MONSTERMAIN, two.width * 0.5, ((wallHeight + 50) - floorHeight * 0.5)-100);
+  drawStats(wallHeight, dockHeight, width);
 
   // Don’t forget to tell two to draw everything to the screen
   two.bind('update', update);
   two.play();
 }
 
+function refreshScreen(){
+  two.width = window.innerWidth;
+
+  // reset everything in the game area
+  wall.remove();
+  floor.remove();
+  monster.remove();
+  for (let i = 0; i < statText.length; i++){
+    statText[i].remove();
+    statBars[i].remove();
+  }
+
+  drawGameScreen();
+  // draw game contents
+  monster = two.makeSprite(monsterImgs.MONSTERMAIN, two.width * 0.5, ((wallHeight + 50) - floorHeight * 0.5)-100);
+  drawStats(wallHeight, dockHeight, width);
+}
+
 function update(frameCount) {
+  // Handle moving into the next stage if needed
   var totalStatVal = 0;
   for (let i = 0; i < stats.length; i++){
     if (stats[i] > 10){
@@ -163,6 +141,19 @@ function update(frameCount) {
     }
     totalStatVal += stats[i];
   }
+
+  // Handle stat update
+  if (statUpdatePending){
+    lastStatUpdate    = frameCount;
+    statUpdatePending = false;
+  }
+  if ((frameCount - lastStatUpdate) > 500 && totalStatVal < 20 && stats[4] < 10){
+    stats[4]++;
+    totalStatVal++;
+    lastStatUpdate = frameCount;
+    console.log(frameCount);
+  }
+
   if (totalStatVal > 20){
     for (let i = 0; i < stats.length; i++){
       stats[i] = 0;
@@ -170,21 +161,6 @@ function update(frameCount) {
     console.log("Next monster stage reached!");
     monsterStage++;
   }
-
-  wall.fill = wallColor;
-  statText[0].value = "fullness: " + stats[0];
-  statText[1].value = "happiness: " + stats[1];
-  statText[2].value = "training: " + stats[2];
-  statText[3].value = "activity: " + stats[3];
-  statText[4].value = "neglect: " + stats[4];
-
-  statBars[0].remove();
-  statBars[1].remove();
-  statBars[2].remove();
-  statBars[3].remove();
-  statBars[4].remove();
-
-  drawStatBars()
-
-  //console.log("wallColor is " + wallColor);
+  
+  refreshScreen();
 }

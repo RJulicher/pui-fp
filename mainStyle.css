@@ -1,15 +1,58 @@
 #gameArea {
-  margin-left:  auto;
-  margin-right: auto;
+  margin-left:      -8px;
+  height:           420px;
+  width:            fit-content;
+  align-content:    center;
 }
 
-#gameScreen {
-  border:       1px solid #000000;
-  padding-left: 0;
-  padding-right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-  width:        700px;
-  height:       500px;
+#colorButtons {
+  display:          flex;
+  flex-direction:   column;
+  width:            30px;
+  height:           160px;
+  top:              100px;
+  right:            60px;
+  position:         absolute;
+  justify-content:  space-between;
+}
+
+.color {
+  width:            30px;
+  height:           30px;
+  border-radius:    10px;
+  border-style:     hidden;
+}
+
+#blue {
+  background-color: #75C5CA;
+}
+
+#green {
+  background-color: #A8DFA6;
+}
+
+#pink {
+  background-color: #DFC1D7;
+}
+
+#grey {
+  background-color: #97A0A0;
+}
+
+#actionOptions {
+  margin-left:      auto;
+  margin-right:     auto;
+  height:           85px;
+  background-color: #B7C3C3;
+  display:          flex;
+  justify-content:  space-around;
+  margin-left:      20px;
+  margin-right:     20px;
+  border-radius:    10px;
+  padding-top:      20px;
+  padding-bottom:   20px;
+}
+
+.action {
+  border-radius:    20px;
 }
