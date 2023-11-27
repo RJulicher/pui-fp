@@ -1,14 +1,47 @@
-const monsterImgs = {
-  MONSTERMAIN: new Two.Texture("./assets/monsterMain.png")
-};
+const monsterImgs = [
+  new Two.Texture("./assets/monsterFed.png"),
+  new Two.Texture("./assets/monsterPet.png"),
+  new Two.Texture("./assets/monsterTrained.png"),
+  new Two.Texture("./assets/monsterWalked.png"),
+];
 
-var two;
+const monsterIconImgs = [
+  new Two.Texture("./assets/feedIcon.png"),
+  new Two.Texture("./assets/petIcon.png"),
+  new Two.Texture("./assets/trainIcon.png"),
+  new Two.Texture("./assets/walkIcon.png"),
+];
+
+const monsterMainImgs = [
+  new Two.Texture("./assets/monsterMain1.png"),
+  new Two.Texture("./assets/monsterMain2.png"),
+  new Two.Texture("./assets/monsterMain3.png"),
+  new Two.Texture("./assets/monsterMain4.png"),
+  new Two.Texture("./assets/monsterMain5.png"),
+  new Two.Texture("./assets/monsterMain6.png")
+];
+
+const monsterMain = [
+  monsterMainImgs[1],monsterMainImgs[2],
+  monsterMainImgs[3],monsterMainImgs[1],
+  monsterMainImgs[4],monsterMainImgs[5],
+  monsterMainImgs[1]
+];
+
+var two; // Graphics canvas
+
 var monsterStage; // Stage of monster growth
+
+// variables needed to track animation
+var monsterState;
+var animationFrame;
+var animationStartFrame;
 
 // Game graphic elements
 var wall;
 var floor;
 var monster;
+var monsterIcon;
 var statText;
 var statBars;
 var help;
@@ -83,18 +116,50 @@ function drawStats(wallHeight, dockHeight){
 
 
 
+function drawMonster(frameCount){
+  var x = two.width * 0.5;
+  var y = ((wallHeight + 50) - floorHeight * 0.5)-100;
+  var difference = frameCount - animationStartFrame;
 
+  // Remove current monster
+  if (monster != null) {
+    monster.remove();
+    if (monsterIcon != null){
+      monsterIcon.remove();
+    }
+  }
+  
+  // If the monster isn't currently in default state, show reaction or switch states
+  if (monsterState != -1){
+    // animation runtime has expired, switch to default
+    if (difference > 50){
+      monsterState = -1;
+      animationStartFrame = frameCount;
+    }
+    else {
+      //console.log("monsterState is " + monsterState);
+      monster = two.makeSprite(monsterImgs[monsterState], x, y);
+      monsterIcon = two.makeSprite(monsterIconImgs[monsterState], x+150, y-100);
+    }
+  }
+  
+  // DEFAULT
+  if (monsterState == -1){
+    animationFrame = (monsterMain.length-1) - ((difference / 10) % (monsterMain.length-1));
+    monster = two.makeSprite(monsterMain[animationFrame], x, y);
+  }
+}
 
 // Make an instance of two and place it on the page.
 function init(){
   // initializing game variables
-  wallColor = "#EAEAEA";
-  fullness  = 0;
-  happiness = 0;
-  training  = 0;
-  activity  = 0;
-  neglect   = 0;
+  wallColor           = "#EAEAEA";
+  monsterState        = -1;
+  animationStartFrame = 0;
+  monsterIcon         = null;
+  monster             = null;
 
+  
   // initialize game screen
   var params = {
     fullscreen: false,
@@ -106,7 +171,7 @@ function init(){
 
   drawGameScreen(two);
   // draw game contents
-  monster = two.makeSprite(monsterImgs.MONSTERMAIN, two.width * 0.5, ((wallHeight + 50) - floorHeight * 0.5)-100);
+  drawMonster(0);
   drawStats(wallHeight, dockHeight, width);
 
   // Don’t forget to tell two to draw everything to the screen
@@ -114,13 +179,12 @@ function init(){
   two.play();
 }
 
-function refreshScreen(){
+function refreshScreen(frameCount){
   two.width = window.innerWidth;
 
   // reset everything in the game area
   wall.remove();
   floor.remove();
-  monster.remove();
   for (let i = 0; i < statText.length; i++){
     statText[i].remove();
     statBars[i].remove();
@@ -128,11 +192,13 @@ function refreshScreen(){
 
   drawGameScreen();
   // draw game contents
-  monster = two.makeSprite(monsterImgs.MONSTERMAIN, two.width * 0.5, ((wallHeight + 50) - floorHeight * 0.5)-100);
+  drawMonster(frameCount);
   drawStats(wallHeight, dockHeight, width);
 }
 
 function update(frameCount) {
+  if ((frameCount % 10) != 0) return;
+  //console.log(frameCount);
   // Handle moving into the next stage if needed
   var totalStatVal = 0;
   for (let i = 0; i < stats.length; i++){
@@ -144,14 +210,15 @@ function update(frameCount) {
 
   // Handle stat update
   if (statUpdatePending){
-    lastStatUpdate    = frameCount;
-    statUpdatePending = false;
+    lastStatUpdate      = frameCount;
+    animationStartFrame = frameCount;
+    statUpdatePending   = false;
   }
-  if ((frameCount - lastStatUpdate) > 500 && totalStatVal < 20 && stats[4] < 10){
+  // Handle neglect
+  if ((frameCount - lastStatUpdate) > 500 && stats[4] < 10){
     stats[4]++;
     totalStatVal++;
     lastStatUpdate = frameCount;
-    console.log(frameCount);
   }
 
   if (totalStatVal > 20){
@@ -162,5 +229,5 @@ function update(frameCount) {
     monsterStage++;
   }
   
-  refreshScreen();
+  refreshScreen(frameCount);
 }
