@@ -24,8 +24,7 @@ const monsterMainImgs = [
 const monsterMain = [
   monsterMainImgs[1],monsterMainImgs[2],
   monsterMainImgs[3],monsterMainImgs[1],
-  monsterMainImgs[4],monsterMainImgs[5],
-  monsterMainImgs[1]
+  monsterMainImgs[4],monsterMainImgs[5]
 ];
 
 var two; // Graphics canvas
@@ -51,13 +50,11 @@ var wallHeight;
 var floorHeight;
 var dockHeight;
 
+
+// Draws the wall and floor of the game screen
 function drawGameScreen(){
   // general game area variables
-  width         = two.width - 90;
   var x         = two.width * 0.5;  // center X val
-  wallHeight    = 350;
-  floorHeight   = wallHeight * 0.25;
-  dockHeight    = 125;
   // draw wall and floor
   var wallY = (wallHeight * 0.5) + 50;
   wall = two.makeRectangle(x, wallY, width, wallHeight);
@@ -116,25 +113,25 @@ function drawStats(wallHeight, dockHeight){
 
 
 
-function drawMonster(frameCount){
+function drawMonster(frameCount, bringToTop){
   var x = two.width * 0.5;
   var y = ((wallHeight + 50) - floorHeight * 0.5)-100;
   var difference = frameCount - animationStartFrame;
 
-  // Remove current monster
-  if (monster != null) {
-    monster.remove();
-    if (monsterIcon != null){
-      monsterIcon.remove();
-    }
-  }
-  
   // If the monster isn't currently in default state, show reaction or switch states
   if (monsterState != -1){
+    if (monster != null){
+      monster.remove();
+      if (monsterIcon != null){
+        monsterIcon.remove();
+      }
+    }
+
     // animation runtime has expired, switch to default
     if (difference > 50){
       monsterState = -1;
       animationStartFrame = frameCount;
+      bringToTop = true;
     }
     else {
       //console.log("monsterState is " + monsterState);
@@ -144,9 +141,17 @@ function drawMonster(frameCount){
   }
   
   // DEFAULT
-  if (monsterState == -1){
-    animationFrame = (monsterMain.length-1) - ((difference / 10) % (monsterMain.length-1));
-    monster = two.makeSprite(monsterMain[animationFrame], x, y);
+  if (bringToTop && monsterState == -1){
+    if (monster != null){
+      monster.remove();
+      if (monsterIcon != null){
+        monsterIcon.remove();
+      }
+    }
+    //console.log("Drawing monster at " + x + ", " + y)
+    monster = two.makeImageSequence(monsterMain, x, y, 7, true);
+    // animationFrame = (monsterMain.length-1) - ((difference / 10) % (monsterMain.length-1));
+    // monster = two.makeSprite(monsterMain[animationFrame], x, y);
   }
 }
 
@@ -158,21 +163,26 @@ function init(){
   animationStartFrame = 0;
   monsterIcon         = null;
   monster             = null;
-
   
   // initialize game screen
   var params = {
     fullscreen: false,
     width: window.innerWidth,
-    height: 1000
+    height: 700
   };
   var elem = document.querySelector("#gameArea");
   two = new Two(params).appendTo(elem);
 
-  drawGameScreen(two);
-  // draw game contents
-  drawMonster(0);
+  width         = two.width - 90;
+  wallHeight    = 350;
+  floorHeight   = wallHeight * 0.25;
+  dockHeight    = 125;
+
+  drawGameScreen();
   drawStats(wallHeight, dockHeight, width);
+
+  // draw game contents
+  drawMonster(0, true);
 
   // Don’t forget to tell two to draw everything to the screen
   two.bind('update', update);
@@ -180,24 +190,33 @@ function init(){
 }
 
 function refreshScreen(frameCount){
-  two.width = window.innerWidth;
+  if (window.innerWidth != two.width){
+    console.log("Redrawing the stage!");
+    two.width = window.innerWidth;
+    // reset everything in the game area
+    wall.remove();
+    floor.remove();
+    for (let i = 0; i < statText.length; i++){
+      statText[i].remove();
+      statBars[i].remove();
+    }
 
-  // reset everything in the game area
-  wall.remove();
-  floor.remove();
-  for (let i = 0; i < statText.length; i++){
-    statText[i].remove();
-    statBars[i].remove();
+    drawGameScreen();
+    drawStats(wallHeight, dockHeight, width);
+    drawMonster(frameCount, true);
   }
 
-  drawGameScreen();
   // draw game contents
-  drawMonster(frameCount);
-  drawStats(wallHeight, dockHeight, width);
+  else drawMonster(frameCount, false);
 }
 
 function update(frameCount) {
-  if ((frameCount % 10) != 0) return;
+  width         = two.width - 90;
+  wallHeight    = 350;
+  floorHeight   = wallHeight * 0.25;
+  dockHeight    = 125;
+  
+  //if ((frameCount % 10) != 0) return;
   //console.log(frameCount);
   // Handle moving into the next stage if needed
   var totalStatVal = 0;
@@ -228,6 +247,6 @@ function update(frameCount) {
     console.log("Next monster stage reached!");
     monsterStage++;
   }
-  
+
   refreshScreen(frameCount);
 }
