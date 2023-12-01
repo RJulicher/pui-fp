@@ -33,7 +33,6 @@ var monsterStage; // Stage of monster growth
 
 // variables needed to track animation
 var monsterState;
-var animationFrame;
 var animationStartFrame;
 
 // Game graphic elements
@@ -150,8 +149,6 @@ function drawMonster(frameCount, bringToTop){
     }
     //console.log("Drawing monster at " + x + ", " + y)
     monster = two.makeImageSequence(monsterMain, x, y, 7, true);
-    // animationFrame = (monsterMain.length-1) - ((difference / 10) % (monsterMain.length-1));
-    // monster = two.makeSprite(monsterMain[animationFrame], x, y);
   }
 }
 
@@ -190,7 +187,7 @@ function init(){
 }
 
 function refreshScreen(frameCount){
-  if (window.innerWidth != two.width){
+  if (window.innerWidth != two.width || wallUpdatePending){
     console.log("Redrawing the stage!");
     two.width = window.innerWidth;
     // reset everything in the game area
@@ -204,6 +201,7 @@ function refreshScreen(frameCount){
     drawGameScreen();
     drawStats(wallHeight, dockHeight, width);
     drawMonster(frameCount, true);
+    wallUpdatePending = false;
   }
 
   // draw game contents

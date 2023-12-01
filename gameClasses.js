@@ -3,10 +3,12 @@ var stats = [0,0,0,0,0];
 var wallColor;
 
 var statUpdatePending = false;
+var wallUpdatePending = false;
 var lastStatUpdate = 0;
 
 function changeWallColor(){
   wallColor = event.currentTarget.value;
+  wallUpdatePending = true;
   //this.two.update();
   /*
   console.log("this button's color is " + event.currentTarget.value + 
