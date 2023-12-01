@@ -187,35 +187,35 @@ function init(){
 }
 
 function refreshScreen(frameCount){
+  for (let i = 0; i < statText.length; i++){
+    statText[i].remove();
+    statBars[i].remove();
+  }
+  drawStats(wallHeight, dockHeight, width);
+
+  // If the size of the window or the wall color is updated,
+  // redraw the background
   if (window.innerWidth != two.width || wallUpdatePending){
     console.log("Redrawing the stage!");
     two.width = window.innerWidth;
     // reset everything in the game area
     wall.remove();
     floor.remove();
-    for (let i = 0; i < statText.length; i++){
-      statText[i].remove();
-      statBars[i].remove();
-    }
 
     drawGameScreen();
-    drawStats(wallHeight, dockHeight, width);
     drawMonster(frameCount, true);
     wallUpdatePending = false;
   }
 
-  // draw game contents
-  else drawMonster(frameCount, false);
+  // update the monster as needed
+  else {
+    drawMonster(frameCount, false);
+  }
 }
 
 function update(frameCount) {
   width         = two.width - 90;
-  wallHeight    = 350;
-  floorHeight   = wallHeight * 0.25;
-  dockHeight    = 125;
-  
-  //if ((frameCount % 10) != 0) return;
-  //console.log(frameCount);
+
   // Handle moving into the next stage if needed
   var totalStatVal = 0;
   for (let i = 0; i < stats.length; i++){
