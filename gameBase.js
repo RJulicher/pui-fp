@@ -21,6 +21,14 @@ const monsterMainImgs = [
   new Two.Texture("./assets/monsterMain6.png")
 ];
 
+const monsterFinalImgs = [
+  new Two.Texture("./assets/feedFinal.png"),
+  new Two.Texture("./assets/petFinal.png"),
+  new Two.Texture("./assets/trainFinal.png"),
+  new Two.Texture("./assets/walkFinal.png"),
+  new Two.Texture("./assets/neglectFinal.png")
+];
+
 const monsterMain = [
   monsterMainImgs[1],monsterMainImgs[2],
   monsterMainImgs[3],monsterMainImgs[1],
@@ -49,6 +57,8 @@ var wallHeight;
 var floorHeight;
 var dockHeight;
 
+var maxStat;
+
 
 // Draws the wall and floor of the game screen
 function drawGameScreen(){
@@ -66,13 +76,7 @@ function drawGameScreen(){
   floor.noStroke();
 }
 
-function drawStatBars(){
-  var statHeight    = 75;
-  var totalGap      = 50 + 20 + 50;
-  var midpointBarY  = totalGap + 350 + 120;
-  var x             = two.width * 0.5;  // center X val
-  var textGap       = 90;
-
+function drawStatBars(x, textGap, statHeight, midpointBarY){
   statBars = [two.makeRectangle(x - (textGap * 2), midpointBarY + (statHeight-(stats[0] * 5)), 50, (stats[0] * 10)),
     two.makeRectangle(x - textGap, midpointBarY + (statHeight-(stats[1] * 5)), 50, (stats[1] * 10)),
     two.makeRectangle(x, midpointBarY + (statHeight-(stats[2] * 5)), 50, (stats[2] * 10)),
@@ -88,9 +92,9 @@ function drawStatBars(){
 
 function drawStats(wallHeight, dockHeight){
   var statHeight    = 75;
-  var totalGap      = 50 + 20 + 50;
+  var totalGap      = 50 + 10 + 50;
   var midpointBarY  = totalGap + wallHeight + dockHeight;
-  var midpointTextY = totalGap + wallHeight + dockHeight + (statHeight + 20);
+  var midpointTextY = totalGap + wallHeight + dockHeight + (statHeight + 10);
   var x             = two.width * 0.5;  // center X val
   var textGap       = 90;
 
@@ -152,6 +156,49 @@ function drawMonster(frameCount, bringToTop){
   }
 }
 
+function drawFinal(){
+  if (finalScreenPending){
+    maxStat = 0;
+    runningMax = 0;
+    for (let i = 0; i < stats.length; i++){
+      if (statTotals[i] > runningMax) {
+        maxStat = i;
+        runningMax = statTotals[i];
+      }
+    }
+
+    // Remove what needs removing
+    for (let i = 0; i < statText.length; i++){
+      statText[i].remove();
+      statBars[i].remove();
+    }
+
+    var actionDiv = document.getElementById("actionOptions");
+    actionDiv.style.display = "none";
+
+    // Show restart
+    var restart = document.getElementById("restart");
+    restart.style.display = "block";
+
+    finalScreenPending = false;
+  }
+
+  monster.remove();
+  if (monsterIcon != null) monsterIcon.remove();
+  var x = two.width * 0.5;
+  var y = ((wallHeight + 50) - floorHeight * 0.5)-100;
+
+  if (maxStat == 0) y -= 68;
+  monster = two.makeSprite(monsterFinalImgs[maxStat], x, y);
+  finalScreenPending = false;
+}
+
+
+
+
+
+
+
 // Make an instance of two and place it on the page.
 function init(){
   // initializing game variables
@@ -160,12 +207,13 @@ function init(){
   animationStartFrame = 0;
   monsterIcon         = null;
   monster             = null;
+  monsterStage        = 0;
   
   // initialize game screen
   var params = {
     fullscreen: false,
     width: window.innerWidth,
-    height: 700
+    height: 680
   };
   var elem = document.querySelector("#gameArea");
   two = new Two(params).appendTo(elem);
@@ -191,25 +239,49 @@ function refreshScreen(frameCount){
     statText[i].remove();
     statBars[i].remove();
   }
-  drawStats(wallHeight, dockHeight, width);
+  if (monsterStage < 1) drawStats(wallHeight, dockHeight, width);
 
   // If the size of the window or the wall color is updated,
   // redraw the background
   if (window.innerWidth != two.width || wallUpdatePending){
-    console.log("Redrawing the stage!");
+    //console.log("Redrawing the stage!");
     two.width = window.innerWidth;
-    // reset everything in the game area
+
+
+    // reset everything in the game background
     wall.remove();
     floor.remove();
-
     drawGameScreen();
-    drawMonster(frameCount, true);
     wallUpdatePending = false;
+
+    if (monsterStage < 1){
+      drawMonster(frameCount, true);
+    }
+    else{
+      drawFinal();
+    }
   }
 
   // update the monster as needed
   else {
-    drawMonster(frameCount, false);
+    if (monsterStage < 1){
+      drawMonster(frameCount, false);
+
+      var buttonDiv = document.getElementById("actionOptions");
+      if (buttonDiv.style.display != "flex"){
+        buttonDiv.style.display = "flex";
+      }
+
+      var restart = document.getElementById("restart");
+      if (restart.style.display != "none"){
+        restart.style.display = "none";
+      }
+    }
+  }
+
+  // If we're at the final stage
+  if (monsterStage == 1){
+    drawFinal();
   }
 }
 
@@ -232,18 +304,23 @@ function update(frameCount) {
     statUpdatePending   = false;
   }
   // Handle neglect
-  if ((frameCount - lastStatUpdate) > 500 && stats[4] < 10){
+  if ((frameCount - lastStatUpdate) > 500 && stats[4] < 10 && monsterStage < 1){
     stats[4]++;
     totalStatVal++;
     lastStatUpdate = frameCount;
   }
 
-  if (totalStatVal > 20){
+  if (totalStatVal >= 20){
     for (let i = 0; i < stats.length; i++){
+      statTotals[i] += stats[i];
+      //console.log("stat " + i + " is " + stats[i]);
+      //console.log("statTotal " + i + " is " + statTotals[i]);
       stats[i] = 0;
     }
+
     console.log("Next monster stage reached!");
     monsterStage++;
+    if (monsterStage == 1) finalScreenPending = true;
   }
 
   refreshScreen(frameCount);

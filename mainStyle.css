@@ -1,6 +1,6 @@
 #gameArea {
   margin-left:      -8px;
-  height:           420px;
+  height:           410px;
   width:            fit-content;
   align-content:    center;
 }
@@ -40,8 +40,6 @@
 }
 
 #actionOptions {
-  margin-left:      auto;
-  margin-right:     auto;
   height:           85px;
   background-color: #B7C3C3;
   display:          flex;
@@ -51,6 +49,24 @@
   border-radius:    10px;
   padding-top:      20px;
   padding-bottom:   20px;
+}
+
+#restart {
+  display:          none;
+  margin-left:      24%;
+  margin-right:     24%;
+  border-style:     none;
+  border-radius:    5px;;
+  height:           50px;
+  width:            50%;
+  font-size:        larger;
+  font-weight:      bolder;
+  color:          white;
+  background-color: green;
+}
+
+#restart:hover {
+  background-color: darkgreen;
 }
 
 .action {
