@@ -1,6 +1,6 @@
 // This file contains mainly button classes for now
-var stats = [0,0,0,0,0];
-var statTotals = [0,0,0,0,0];
+var stats;
+var statTotals;
 var wallColor;
 
 var statUpdatePending = false;
@@ -20,6 +20,7 @@ function updateStat(){
 }
 
 function restart(){
+  console.log("restarting");
   monsterStage  = 0;
   stats         = [0,0,0,0,0];
   statTotals    = [0,0,0,0,0];

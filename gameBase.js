@@ -40,7 +40,7 @@ var two; // Graphics canvas
 var monsterStage; // Stage of monster growth
 
 // variables needed to track animation
-var monsterState;
+var monsterState; // monster icon state
 var animationStartFrame;
 
 // Game graphic elements
@@ -58,6 +58,13 @@ var floorHeight;
 var dockHeight;
 
 var maxStat;
+
+function serializeGame(){
+  localStorage.setItem("wallColor", wallColor);
+  localStorage.setItem("monsterStage", monsterStage);
+  localStorage.setItem("stats", JSON.stringify(stats));
+  localStorage.setItem("statTotals", JSON.stringify(statTotals));
+}
 
 
 // Draws the wall and floor of the game screen
@@ -202,13 +209,16 @@ function drawFinal(){
 // Make an instance of two and place it on the page.
 function init(){
   // initializing game variables
-  wallColor           = "#EAEAEA";
+  wallColor           = (localStorage.getItem("wallColor") || "#EAEAEA");
   monsterState        = -1;
   animationStartFrame = 0;
   monsterIcon         = null;
   monster             = null;
-  monsterStage        = 0;
-  
+  monsterStage        = (parseInt(JSON.parse(localStorage.getItem("monsterState"))) || 0);
+  stats               = (JSON.parse(localStorage.getItem("stats")) || [0,0,0,0,0]);
+  statTotals          = (JSON.parse(localStorage.getItem("statTotals")) || [0,0,0,0,0]);
+  statUpdatePending = true;
+
   // initialize game screen
   var params = {
     fullscreen: false,
@@ -231,6 +241,7 @@ function init(){
 
   // Don’t forget to tell two to draw everything to the screen
   two.bind('update', update);
+  //console.log("completely finished initializing, stats = " + localStorage.getItem("stats"));
   two.play();
 }
 
@@ -244,10 +255,7 @@ function refreshScreen(frameCount){
   // If the size of the window or the wall color is updated,
   // redraw the background
   if (window.innerWidth != two.width || wallUpdatePending){
-    //console.log("Redrawing the stage!");
     two.width = window.innerWidth;
-
-
     // reset everything in the game background
     wall.remove();
     floor.remove();
@@ -271,7 +279,6 @@ function refreshScreen(frameCount){
       if (buttonDiv.style.display != "flex"){
         buttonDiv.style.display = "flex";
       }
-
       var restart = document.getElementById("restart");
       if (restart.style.display != "none"){
         restart.style.display = "none";
@@ -283,6 +290,8 @@ function refreshScreen(frameCount){
   if (monsterStage == 1){
     drawFinal();
   }
+
+  serializeGame();
 }
 
 function update(frameCount) {
@@ -313,8 +322,6 @@ function update(frameCount) {
   if (totalStatVal >= 20){
     for (let i = 0; i < stats.length; i++){
       statTotals[i] += stats[i];
-      //console.log("stat " + i + " is " + stats[i]);
-      //console.log("statTotal " + i + " is " + statTotals[i]);
       stats[i] = 0;
     }
 
@@ -322,6 +329,7 @@ function update(frameCount) {
     monsterStage++;
     if (monsterStage == 1) finalScreenPending = true;
   }
+  //console.log("updating - stat values: " + stats);
 
   refreshScreen(frameCount);
 }
