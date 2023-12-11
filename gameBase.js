@@ -105,7 +105,6 @@ function drawStats(wallHeight, dockHeight){
   var x             = two.width * 0.5;  // center X val
   var textGap       = 90;
 
-  //console.log("drawing stats");
   var styles = {
     size: 15,
     color: 'black'
