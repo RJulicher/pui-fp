@@ -63,7 +63,6 @@ function serializeGame(){
   localStorage.setItem("wallColor", wallColor);
   localStorage.setItem("monsterStage", monsterStage);
   localStorage.setItem("stats", JSON.stringify(stats));
-  localStorage.setItem("statTotals", JSON.stringify(statTotals));
 }
 
 
@@ -162,14 +161,18 @@ function drawMonster(frameCount, bringToTop){
   }
 }
 
+// Draw the final screen
 function drawFinal(){
   if (finalScreenPending){
     maxStat = 0;
     runningMax = 0;
     for (let i = 0; i < stats.length; i++){
-      if (statTotals[i] > runningMax) {
+      if (stats[i] > runningMax) {
         maxStat = i;
-        runningMax = statTotals[i];
+        runningMax = stats[i];
+      }
+      else {
+        console.log("stat " + i + " is not greater than maxStat " + maxStat + ": " + stats[i] + "-" + runningMax);
       }
     }
 
@@ -181,10 +184,17 @@ function drawFinal(){
 
     var actionDiv = document.getElementById("actionOptions");
     actionDiv.style.display = "none";
+    var colorDiv = document.getElementById("colorButtons");
+    colorDiv.style.display = "none";
 
-    // Show restart
+    createResults(maxStat);
+
+    // Show restart and results
+    var results = document.getElementById("results");
+    results.style.display = "flex";
     var restart = document.getElementById("restart");
     restart.style.display = "block";
+    
 
     finalScreenPending = false;
   }
@@ -215,7 +225,6 @@ function init(){
   monster             = null;
   monsterStage        = (parseInt(JSON.parse(localStorage.getItem("monsterState"))) || 0);
   stats               = (JSON.parse(localStorage.getItem("stats")) || [0,0,0,0,0]);
-  statTotals          = (JSON.parse(localStorage.getItem("statTotals")) || [0,0,0,0,0]);
   statUpdatePending = true;
 
   // initialize game screen
@@ -277,10 +286,14 @@ function refreshScreen(frameCount){
       var buttonDiv = document.getElementById("actionOptions");
       if (buttonDiv.style.display != "flex"){
         buttonDiv.style.display = "flex";
+        var colorDiv = document.getElementById("colorButtons");
+        colorDiv.style.display = "flex";
       }
       var restart = document.getElementById("restart");
       if (restart.style.display != "none"){
         restart.style.display = "none";
+        var results = document.getElementById("results");
+        results.style.display = "none";
       }
     }
   }
@@ -319,11 +332,6 @@ function update(frameCount) {
   }
 
   if (totalStatVal >= 20){
-    for (let i = 0; i < stats.length; i++){
-      statTotals[i] += stats[i];
-      stats[i] = 0;
-    }
-
     console.log("Next monster stage reached!");
     monsterStage++;
     if (monsterStage == 1) finalScreenPending = true;

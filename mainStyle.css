@@ -51,10 +51,39 @@
   padding-bottom:   20px;
 }
 
+.action {
+  border-radius:    20px;
+}
+
+
+/* END SCREEN ELEMENTS */
+
+#results{
+  display: none;
+  align-items: center;
+  flex-direction: column;
+  font-family: 'Krub', sans-serif;
+}
+
+#results > h2 {
+  font-size: 6vw;
+  margin-top: 0;
+  margin-bottom: 10px;
+  margin-left: 5vw;
+  margin-right: 5vw;
+  text-align: center;
+}
+
+#results > p {
+  margin-top: 0;
+  margin-bottom: 3em;
+  margin-left: 5vw;
+  margin-right: 5vw;
+  font-size: 1em;
+}
+
 #restart {
   display:          none;
-  margin-left:      24%;
-  margin-right:     24%;
   border-style:     none;
   border-radius:    5px;;
   height:           50px;
@@ -67,8 +96,4 @@
 
 #restart:hover {
   background-color: darkgreen;
-}
-
-.action {
-  border-radius:    20px;
 }
