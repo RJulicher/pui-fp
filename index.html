@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <title>Monster Raiser</title>
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Krub:wght@200;300;400;700&display=swap" rel="stylesheet">
@@ -12,27 +12,47 @@
     <script src="./js/two.js"></script>
     <script src="./gameClasses.js" defer></script>
     <script src="./gameBase.js" defer></script>
+    <script src="./savedMonsters.js" defer></script>
 
     <link rel="shortcut icon" href="assets/monsterMain1.png" type="image/x-icon" />
   </head>
   
   <body onload="init()">
+    <section id="monsterName">
+      <label for="nameBox">PET NAME:</label>
+      <input type="text" id="nameBox" name="nameBox" value="Gumdrop">
+      <input type="button" id="load" value="COLLECTION" onclick="showSavedMonsters()"> 
+    </section>
+
+    <section id="monsterContainer">
+      <div id="savedMonsters">
+        <div id="monsterHeader">
+          <h2>Your Monsters:</h2>
+          <input type="button" id="exit" value="X" onclick="hideSavedMonsters()">
+        </div>
+
+        <div id="monsterContent">
+        </div>
+      </div>
+    </section>
+
     <div id="colorButtons">
       <button type="button" id="blue" class="color" value="#75C5CA" onclick="changeWallColor()">
       <button type="button" id="green" class="color" value="#A8DFA6" onclick="changeWallColor()">
       <button type="button" id="pink" class="color" value="#DFC1D7" onclick="changeWallColor()">
       <button type="button" id="grey" class="color" value="#EAEAEA" onclick="changeWallColor()">
     </div>
-    <div id="gameArea">
+    
+    <div id="gameArea"></div>
 
-      <!--<canvas id="gameScreen"></canvas>-->
-    </div>
     <section id="results">
       <h2>Tester Monster</h2>
       <br>
       <p>Tester text explaining all of your actions and why they are bad or good</p>
       <input type="button" id="restart" value="RESTART" onclick="restart()">
+      <input type="button" id="save" value="KEEP" onclick="save()">
     </section>
+
     <div id="actionOptions">
       <input type="image" src="./assets/feed.png" class="action" id="feed" value="0" 
         onmouseover="this.src='./assets/feedHover.png'" onmouseout="this.src='./assets/feed.png'" onclick="updateStat()">

@@ -1,11 +1,13 @@
 // This file contains mainly button classes for now
 var stats;
 var wallColor;
+var savedMonsters;
 
 var statUpdatePending = false;
 var wallUpdatePending = false;
 var finalScreenPending = false;
 var lastStatUpdate = 0;
+var restarting = false;
 
 function changeWallColor(){
   wallColor = event.currentTarget.value;
@@ -19,11 +21,19 @@ function updateStat(){
 }
 
 function restart(){
-  console.log("restarting");
   monsterStage  = 0;
+  monsterState  = -1;
+  restarting = true;
   stats         = [0,0,0,0,0];
   serializeGame()
   statUpdatePending = true;
+}
+
+function save(){
+  savedMonsters.push({"name": document.querySelector("#monsterName > input").value,
+                      "wallColor": wallColor, "monsterStage": monsterStage, "stats": stats})
+  localStorage.setItem("savedMonsters", JSON.stringify(savedMonsters));
+  document.querySelector("#save").style.display = "none";
 }
 
 function createResults(maxStat){
