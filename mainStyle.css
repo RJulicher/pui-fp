@@ -151,7 +151,7 @@
 
 #nameBox {
   overflow: hidden;
-  display: block;
+  text-overflow: ellipsis;
   font-family: 'Krub', sans-serif;
   font-weight: 400;
   width: 100%;
@@ -249,6 +249,7 @@
   height: 20em;
   width: 16em;
   margin: .5em;
+  text-overflow: ellipsis;
 }
 
 .monsterSegment > h1 {
@@ -256,6 +257,8 @@
   font-weight: 700;
   font-size: 1.5em;
   margin-top: 0;
+  width: 9em;
+  overflow: hidden;
 }
 
 .monsterSegment > img {
