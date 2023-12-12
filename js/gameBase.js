@@ -1,3 +1,6 @@
+// -------------------------HOUSEKEEPING-------------------------
+
+// Images for use in animations by Two.js
 const monsterImgs = [
   new Two.Texture("./assets/monsterFed.png"),
   new Two.Texture("./assets/monsterPet.png"),
@@ -39,13 +42,11 @@ const monsterMain = [
 
 var two; // Graphics canvas
 
-var monsterStage; // Stage of monster growth
-
 // variables needed to track animation
 var monsterState; // monster icon state
 var animationStartFrame;
 
-// Game graphic elements
+// Game graphic elements. Yes, they needed to be global.
 var wall;
 var floor;
 var monster;
@@ -54,13 +55,13 @@ var statText;
 var statBars;
 var help;
 
+// Spacing tracker variables
 var width;
 var wallHeight;
 var floorHeight;
 var dockHeight;
 
-var maxStat;
-
+// Write game to localStorage
 function serializeGame(){
   localStorage.setItem("wallColor", wallColor);
   localStorage.setItem("monsterStage", monsterStage);
@@ -68,12 +69,13 @@ function serializeGame(){
   localStorage.setItem("name", JSON.stringify(document.querySelector("#monsterName > input").value));
 }
 
+// -------------------------GAME AREA DRAWING-------------------------
 
 // Draws the wall and floor of the game screen
 function drawGameScreen(){
   // general game area variables
   var x         = two.width * 0.5;  // center X val
-  // draw wall and floor
+  
   var wallY = (wallHeight * 0.5) + 20;
   wall = two.makeRectangle(x, wallY, width, wallHeight);
   wall.fill = wallColor;
@@ -85,6 +87,7 @@ function drawGameScreen(){
   floor.noStroke();
 }
 
+// Draws the bars of the stat section of the screen
 function drawStatBars(x, textGap, statHeight, midpointBarY){
   statBars = [two.makeRectangle(x - (textGap * 2), midpointBarY + (statHeight-(stats[0] * 5)), 50, (stats[0] * 10)),
     two.makeRectangle(x - textGap, midpointBarY + (statHeight-(stats[1] * 5)), 50, (stats[1] * 10)),
@@ -99,6 +102,7 @@ function drawStatBars(x, textGap, statHeight, midpointBarY){
   statBars[4].fill = '#883677'; statBars[4].noStroke();
 }
 
+// Handles all of the stat section drawing
 function drawStats(wallHeight, dockHeight){
   var statHeight    = 75;
   var totalGap      = 20 + 10 + 50;
@@ -122,8 +126,10 @@ function drawStats(wallHeight, dockHeight){
 }
 
 
+// -------------------------MONSTER DRAWING-------------------------
 
 
+// Draws the monster in any non-final state
 function drawMonster(frameCount, bringToTop){
   var x = two.width * 0.5;
   var y = ((wallHeight + 20) - floorHeight * 0.5)-100;
@@ -145,13 +151,12 @@ function drawMonster(frameCount, bringToTop){
       bringToTop = true;
     }
     else {
-      //console.log("monsterState is " + monsterState);
       monster = two.makeSprite(monsterImgs[monsterState], x, y);
       monsterIcon = two.makeSprite(monsterIconImgs[monsterState], x+150, y-100);
     }
   }
   
-  // DEFAULT
+  // DEFAULT STATE
   if (bringToTop && monsterState == -1){
     if (monster != null){
       monster.remove();
@@ -159,23 +164,23 @@ function drawMonster(frameCount, bringToTop){
         monsterIcon.remove();
       }
     }
-    //console.log("Drawing monster at " + x + ", " + y)
     monster = two.makeImageSequence(monsterMain, x, y, 7, true);
   }
 }
 
 // Draw the final screen
 function drawFinal(){
-  if (finalScreenPending){
-    maxStat = 0;
-    runningMax = 0;
-    for (let i = 0; i < stats.length; i++){
-      if (stats[i] > runningMax) {
-        maxStat = i;
-        runningMax = stats[i];
-      }
+  var maxStat;
+  maxStat = 0;
+  runningMax = 0;
+  for (let i = 0; i < stats.length; i++){
+    if (stats[i] > runningMax) {
+      maxStat = i;
+      runningMax = stats[i];
     }
+  }
 
+  if (finalScreenPending){
     // Remove what needs removing
     for (let i = 0; i < statText.length; i++){
       statText[i].remove();
@@ -196,10 +201,9 @@ function drawFinal(){
     restart.style.display = "block";
     var save = document.getElementById("save");
     save.style.display = "block";
-    
-    finalScreenPending = false;
   }
 
+  // Handle screen resizing
   monster.remove();
   if (monsterIcon != null) monsterIcon.remove();
   var x = two.width * 0.5;
@@ -211,12 +215,10 @@ function drawFinal(){
 }
 
 
+// -------------------------INITIALIZATION AND UPDATING-------------------------
 
 
-
-
-
-// Make an instance of two and place it on the page.
+// Initialize everything, draw the screen, and start the update loop
 function init(){
   // initializing game variables
   wallColor           = (localStorage.getItem("wallColor") || "#EAEAEA");
@@ -244,17 +246,17 @@ function init(){
   floorHeight   = wallHeight * 0.25;
   dockHeight    = 125;
 
+  // draw game contents
   drawGameScreen();
   drawStats(wallHeight, dockHeight, width);
-
-  // draw game contents
   drawMonster(0, true);
 
-  // Don’t forget to tell two to draw everything to the screen
+  // tell two to draw everything to the screen
   two.bind('update', update);
   two.play();
 }
 
+// Refresh everything on the screen as needed
 function refreshScreen(frameCount){
   for (let i = 0; i < statText.length; i++){
     statText[i].remove();
@@ -312,6 +314,7 @@ function refreshScreen(frameCount){
   serializeGame();
 }
 
+// Update stats and refresh screen
 function update(frameCount) {
   width         = two.width - 90;
 

@@ -1,0 +1,142 @@
+* {
+  font-family: 'Krub', sans-serif;
+}
+
+h1 {
+  color:darkslategrey;
+  font-weight: 100;
+  font-size: 60px;
+  margin: 0;
+  text-align: center;
+}
+
+/* -------------------HELP BUTTON------------------- */
+
+#help {
+    border-style: none;
+    border-radius: 10px;
+    font-size: 4vw;
+    margin-right: 1em;
+    font-weight: 700;
+    color: white;
+    background-color: cadetblue;
+    height: 5vw;
+    width: 13vw;
+}
+#help:hover {
+    background-color:rgb(57, 122, 124);
+}
+
+/* -------------------NAMING SECTION------------------- */
+
+#monsterName {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0em;
+  margin-top: .5em;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 5%;
+  padding-right: 5%;
+  font-weight: 700;
+  font-size: 3vw;
+}
+
+#monsterName > label {
+  width: 15em;
+  color: slategray;
+}
+
+#nameBox {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 400;
+  width: 100%;
+  height: 3vw;
+  font-size: 2.5vw;
+  border-color: #EAEAEA;
+  border-width: 5px;
+  border-style: dashed;
+  padding: .5vw;
+}
+#nameBox:hover {
+  border-color: #c2c2c2;
+}
+
+/* -------------------TWO JS CANVAS------------------- */
+
+#gameArea {
+  margin-left:      -8px;
+  height:           390px;
+  width:            fit-content;
+  align-content:    center;
+}
+
+/* -------------------COLOR BUTTONS------------------- */
+
+#colorButtons {
+  display:          flex;
+  flex-direction:   column;
+  width:            30px;
+  height:           160px;
+  top:              6vw;
+  padding-top:      200px;
+  right:            85px;
+  position:         absolute;
+  justify-content:  space-between;
+}
+
+.color {
+  width:            30px;
+  height:           30px;
+  border-radius:    10px;
+  border-style:     hidden;
+  font-size:        0px;
+  color:            transparent;
+}
+
+#blue {
+  background-color: #75C5CA;
+}
+#blue:hover {
+  background-color: #64b0b6;
+}
+
+#green {
+  background-color: #A8DFA6;
+}
+#green:hover {
+  background-color: #8ec98c;
+}
+
+#pink {
+  background-color: #DFC1D7;
+}
+#pink:hover {
+  background-color: #c7a0bc;
+}
+
+#grey {
+  background-color: #EAEAEA;
+}
+#grey:hover {
+  background-color: #d8d8d8;
+}
+
+/* -------------------ACTION BUTTONS------------------- */
+
+#actionOptions {
+  height:           85px;
+  background-color: #B7C3C3;
+  display:          flex;
+  justify-content:  space-around;
+  margin-left:      20px;
+  margin-right:     20px;
+  border-radius:    10px;
+  padding-top:      20px;
+  padding-bottom:   20px;
+}
+
+.action {
+  border-radius:    20px;
+}

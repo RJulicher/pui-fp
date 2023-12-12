@@ -1,25 +1,46 @@
-// This file contains mainly button classes for now
+// -------------------------HOUSEKEEPING-------------------------
+
+// If this were MVC (It's almost MVC, but not quite), this would be the Model plus some Controller
+
+// Monster state tracking variables
 var stats;
+var monsterStage; // Stage of monster growth
+
 var wallColor;
 var savedMonsters;
 
+// Game refresh state variables
 var statUpdatePending = false;
 var wallUpdatePending = false;
 var finalScreenPending = false;
 var lastStatUpdate = 0;
 var restarting = false;
 
+// -------------------------EVENT HANDLERS-------------------------
+
+// Handle help popup
+function getHelp(){
+  alert("Welcome to Monster Raiser! To play, click any of the action buttons "+
+      "(Feed, Pet, Train, or Walk) and watch your pet monster grow according to "+
+      "your actions!\n\nYou can name it with the box on the top of the screen, and "+
+      "you can see the monsters you choose to keep track of in the Collections "+
+      "screen.\n\nDon't leave it alone too long, or it might get sad...");
+}
+
+// Handle user updating the wall color
 function changeWallColor(){
   wallColor = event.currentTarget.value;
   wallUpdatePending = true;
 }
 
+// Handle user pressing action button
 function updateStat(){
   monsterState = parseInt(event.currentTarget.value);
   stats[parseInt(event.currentTarget.value)]++;
   statUpdatePending = true;
 }
 
+// Handle user pressing restart button
 function restart(){
   monsterStage  = 0;
   monsterState  = -1;
@@ -29,6 +50,7 @@ function restart(){
   statUpdatePending = true;
 }
 
+// Handle user saving current monster
 function save(){
   savedMonsters.push({"name": document.querySelector("#monsterName > input").value,
                       "wallColor": wallColor, "monsterStage": monsterStage, "stats": stats})
@@ -36,6 +58,7 @@ function save(){
   document.querySelector("#save").style.display = "none";
 }
 
+// Show flavor text for results
 function createResults(maxStat){
   var flavorText = [
     ["Very Well Fed", 

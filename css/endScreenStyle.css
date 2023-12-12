@@ -1,0 +1,57 @@
+/* -------------------END SCREEN ELEMENTS------------------- */
+
+#results{
+  display: none;
+  align-items: center;
+  flex-direction: column;
+}
+
+#results > h2 {
+  font-size: 3em;
+  margin-top: 0;
+  margin-bottom: 10px;
+  margin-left: 5vw;
+  margin-right: 5vw;
+  text-align: center;
+}
+
+#results > p {
+  margin-top: 0;
+  margin-bottom: 3em;
+  margin-left: 5vw;
+  margin-right: 5vw;
+  font-size: 1em;
+}
+
+#restart {
+  display:          none;
+  border-style:     none;
+  border-radius:    5px;;
+  height:           50px;
+  width:            50%;
+  font-size:        larger;
+  font-weight:      bolder;
+  color:          white;
+  background-color: grey;
+}
+
+#restart:hover {
+  background-color: darkgreen;
+}
+
+#save {
+  display:          none;
+  border-style:     none;
+  border-radius:    5px;;
+  height:           50px;
+  width:            50%;
+  font-size:        larger;
+  font-weight:      bolder;
+  color:          white;
+  background-color: darkgray;
+  margin-top: 1em;
+}
+
+#save:hover {
+  background-color: darkcyan;
+}

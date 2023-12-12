@@ -1,0 +1,108 @@
+/* -------------------LOAD MONSTER------------------- */
+
+#load {
+  background-color:cadetblue;
+  color:            white;
+  font-weight: 700;
+  border-style: none;
+  border-radius: 10px;
+  padding-left: 2vw;
+  padding-right: 2vw;
+  font-size: 2.5vw;
+  height: 6vw;
+  margin-left: 2em;
+}
+#load:hover {
+  background-color:rgb(57, 122, 124);
+}
+
+#monsterContainer {
+  display: none;
+  top:              5vw;
+  padding-top:      50px;
+  left: 5%;
+  right: 120px;
+  height: 40em;
+  position: absolute;
+}
+
+#savedMonsters {
+  background-color: rgb(90, 97, 102);
+  height: 100%;
+  font-weight: 700;
+  font-size: 2vw;
+  padding: 1em;
+  border-radius: 10px;
+}
+
+#monsterHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+#savedMonsters > div > h2 {
+  margin-top: 0px;
+  color: white;
+  width: 80%;
+  display: inline;
+}
+
+#monsterHeader > input {
+  width: 2em;
+  height: 2em;
+  border-radius: 20px;
+  border-style: none;
+  background-color: rgb(224, 59, 59);
+  font-family: sans-serif;
+  font-weight: 700;
+  font-size: 2vw;
+  color: white;
+  margin-top: -.5em;
+  margin-right: -.5em;
+}
+
+#monsterContent {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  overflow-y: auto;
+  height: 85%;
+}
+
+#monsterContent > h3 {
+    color: white;
+    font-weight: 300;
+}
+
+/* -------------------MONSTER CARDS------------------- */
+
+.monsterSegment {
+  display: inline-block;
+  background-color:#EAEAEA;
+  border-style: none;
+  border-radius: 20px;
+  padding: 1em;
+  height: 22em;
+  width: 16em;
+  margin: .5em;
+  text-overflow: ellipsis;
+}
+
+.monsterSegment > img {
+  max-width: 90%;
+  max-height: 10em;
+}
+
+.monsterSegment > h1 {
+   
+  font-weight: 700;
+  font-size: 1.5em;
+  margin-top: 0;
+  width: 9em;
+  overflow: hidden;
+}
+
+.monsterSegment > p {
+  padding-left: 1em;
+  text-align: left;
+}

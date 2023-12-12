@@ -8,60 +8,67 @@
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Krub:wght@200;300;400;700&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="mainStyle.css">
-    <script src="./js/two.js"></script>
-    <script src="./gameClasses.js" defer></script>
-    <script src="./gameBase.js" defer></script>
-    <script src="./savedMonsters.js" defer></script>
+    <link rel="stylesheet" href="./css/baseStyle.css">
+    <link rel="stylesheet" href="./css/endScreenStyle.css">
+    <link rel="stylesheet" href="./css/loadMonsterStyle.css">
+
+    <script src="./twojs/two.js"></script>
+    <script src="./js/gameClasses.js" defer></script>
+    <script src="./js/gameBase.js" defer></script>
+    <script src="./js/savedMonsters.js" defer></script>
 
     <link rel="shortcut icon" href="assets/monsterMain1.png" type="image/x-icon" />
   </head>
   
   <body onload="init()">
-    <section id="monsterName">
-      <label for="nameBox">PET NAME:</label>
-      <input type="text" id="nameBox" name="nameBox" value="Gumdrop">
-      <input type="button" id="load" value="COLLECTION" onclick="showSavedMonsters()"> 
-    </section>
+    <main>
+      <h1>Monster Raiser</h1>
+      <section id="monsterName">
+        <button id="help" alt="help" onclick="getHelp()">?</button>
+        <label for="nameBox">PET NAME:</label>
+        <input type="text" id="nameBox" name="nameBox" value="Gumdrop">
+        <input type="button" id="load" value="COLLECTION" onclick="showSavedMonsters()"> 
+      </section>
 
-    <section id="monsterContainer">
-      <div id="savedMonsters">
-        <div id="monsterHeader">
-          <h2>Your Monsters:</h2>
-          <input type="button" id="exit" value="X" onclick="hideSavedMonsters()">
-        </div>
+      <section id="monsterContainer">
+        <div id="savedMonsters">
+          <div id="monsterHeader">
+            <h2>Your Monsters:</h2>
+            <input type="button" id="exit" value="X" onclick="hideSavedMonsters()">
+          </div>
 
-        <div id="monsterContent">
+          <div id="monsterContent">
+          </div>
         </div>
+      </section>
+
+      <div id="colorButtons">
+        <button type="button" id="blue" class="color" value="#75C5CA" onclick="changeWallColor()">blue</button>
+        <button type="button" id="green" class="color" value="#A8DFA6" onclick="changeWallColor()">green</button>
+        <button type="button" id="pink" class="color" value="#DFC1D7" onclick="changeWallColor()">pink</button>
+        <button type="button" id="grey" class="color" value="#EAEAEA" onclick="changeWallColor()">grey</button>
       </div>
-    </section>
 
-    <div id="colorButtons">
-      <button type="button" id="blue" class="color" value="#75C5CA" onclick="changeWallColor()">blue</button>
-      <button type="button" id="green" class="color" value="#A8DFA6" onclick="changeWallColor()">green</button>
-      <button type="button" id="pink" class="color" value="#DFC1D7" onclick="changeWallColor()">pink</button>
-      <button type="button" id="grey" class="color" value="#EAEAEA" onclick="changeWallColor()">grey</button>
-    </div>
+      <div id="gameArea"></div>
 
-    <div id="gameArea"></div>
+      <section id="results">
+        <h2>Tester Monster</h2>
+        <br>
+        <p>Tester text explaining all of your actions and why they are bad or good</p>
+        <input type="button" id="restart" value="RESTART" onclick="restart()">
+        <input type="button" id="save" value="KEEP" onclick="save()">
+      </section>
 
-    <section id="results">
-      <h2>Tester Monster</h2>
-      <br>
-      <p>Tester text explaining all of your actions and why they are bad or good</p>
-      <input type="button" id="restart" value="RESTART" onclick="restart()">
-      <input type="button" id="save" value="KEEP" onclick="save()">
-    </section>
-
-    <div id="actionOptions">
-      <input alt="Feed" type="image" src="./assets/feed.png" class="action" id="feed" value="0" 
-        onmouseover="this.src='./assets/feedHover.png'" onmouseout="this.src='./assets/feed.png'" onclick="updateStat()">
-      <input alt="Pet" type="image" src="./assets/pet.png" class="action" id="pet" value="1" onclick="updateStat()"
-        onmouseover="this.src='./assets/petHover.png'" onmouseout="this.src='./assets/pet.png'" onclick="updateStat()">
-      <input alt="Train" type="image" src="./assets/train.png" class="action" id="train" value="2" onclick="updateStat()"
-        onmouseover="this.src='./assets/trainHover.png'" onmouseout="this.src='./assets/train.png'" onclick="updateStat()">
-      <input alt="Walk" type="image" src="./assets/walk.png" class="action" id="walk" value="3" onclick="updateStat()"
-        onmouseover="this.src='./assets/walkHover.png'" onmouseout="this.src='./assets/walk.png'" onclick="updateStat()">
-    </div>
+      <div id="actionOptions">
+        <input alt="Feed" type="image" src="./assets/feed.png" class="action" id="feed" value="0" 
+          onmouseover="this.src='./assets/feedHover.png'" onmouseout="this.src='./assets/feed.png'" onclick="updateStat()">
+        <input alt="Pet" type="image" src="./assets/pet.png" class="action" id="pet" value="1" onclick="updateStat()"
+          onmouseover="this.src='./assets/petHover.png'" onmouseout="this.src='./assets/pet.png'" onclick="updateStat()">
+        <input alt="Train" type="image" src="./assets/train.png" class="action" id="train" value="2" onclick="updateStat()"
+          onmouseover="this.src='./assets/trainHover.png'" onmouseout="this.src='./assets/train.png'" onclick="updateStat()">
+        <input alt="Walk" type="image" src="./assets/walk.png" class="action" id="walk" value="3" onclick="updateStat()"
+          onmouseover="this.src='./assets/walkHover.png'" onmouseout="this.src='./assets/walk.png'" onclick="updateStat()">
+      </div>
+    </main>
   </body>
 </html>
